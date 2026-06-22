@@ -1,0 +1,142 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "database": "postgres",
+    "schema": "finance_companies"
+  },
+  "tables": {
+    "finance_statements": {
+      "db_table_name": "src_filings",
+      "columns": {
+        "_root": {
+          "end_date": "end_date",
+          "company_number": "company_number"
+        },
+        "profit_loss": {
+          "turnover": "pl_turnover",
+          "cost_of_sales": "pl_cost_of_sales",
+          "administrative_expenses": "pl_administrative_expenses",
+          "distribution_costs": "pl_distribution_costs",
+          "gross_profit_loss": "pl_gross_profit_loss",
+          "operating_profit_loss": "pl_operating_profit_loss",
+          "audit_fees": "pl_audit_fees",
+          "profit_loss": "pl_net_profit_loss",
+          "retained_profits": "pl_retained_profits",
+          "salaries": "pl_salaries",
+          "other_operating_income": "pl_other_op_income",
+          "other_interest_receivable_and_similar_income_finance_income": "pl_other_interest_income",
+          "interest_payable_and_similar_charges_finance_costs": "pl_interest_payable",
+          "profit_loss_on_ordinary_activities_before_tax": "pl_profit_before_tax",
+          "tax_taxcredit_on_profit_or_loss_on_ordinary_activites": "pl_tax_on_profit_loss",
+          "depreciation_expense_property_plant_equipment": "pl_depreciation_ppe",
+          "comprehensive_income_expense": "pl_comprehensive_income"
+        },
+        "balance_sheet": {
+          "fixed_assets": "bs_fixed_assets",
+          "intangible_assets": "bs_intangible_assets",
+          "investments": "bs_investments",
+          "investments_fixed_assets": "bs_inv_fixed_assets",
+          "investment_property": "bs_investment_property",
+          "investment_property_fair_value_model": "bs_investment_property_fv",
+          "investments_in_subsidiaries": "bs_inv_subsidiaries",
+          "investments_in_group_undertakings": "bs_inv_group_undertakings",
+          "investments_in_group_undertakings_participating_interests": "bs_inv_group_part_interests",
+          "investments_in_subsidiaries_measured_fair_value": "bs_inv_subsidiaries_fv",
+          "investments_in_joint_ventures": "bs_inv_joint_ventures",
+          "investments_in_associates": "bs_inv_associates",
+          "other_investments_other_than_loans": "bs_other_investments",
+          "disposals_investment_property_fair_value_model": "bs_disposals_inv_prop_fv",
+          "current_assets": "bs_current_assets",
+          "current_asset_investments": "bs_current_asset_investments",
+          "stock": "bs_stock",
+          "debtors_amounts_falling_due_current": "bs_debtors_current",
+          "trade_debtors_amounts_falling_due_current": "bs_trade_debtors_current",
+          "debtors_amounts_falling_due_non_current": "bs_debtors_non_current",
+          "trade_debtors_amounts_falling_due_non_current": "bs_trade_debtors_non_current",
+          "cash": "bs_cash",
+          "total_assets": "bs_total_assets",
+          "liabilities": "bs_liabilities",
+          "creditors_amounts_falling_due_current": "bs_creditors_current",
+          "trade_creditors_trade_payables_due_current": "bs_trade_creditors_current",
+          "net_current_assets_liabilities": "bs_net_current_assets_liab",
+          "creditors_amounts_falling_due_non_current": "bs_creditors_non_current",
+          "trade_creditors_trade_payables_due_non_current": "bs_trade_creditors_non_current",
+          "total_borrowings": "bs_total_borrowings",
+          "loans_from_directors": "bs_loans_from_directors",
+          "bank_overdrafts": "bs_bank_overdrafts",
+          "bank_overdrafts_current": "bs_bank_overdrafts_current",
+          "bank_overdrafts_non_current": "bs_bank_overdrafts_non_current",
+          "accrued_liabilities": "bs_accrued_liabilities",
+          "government_grants_payable": "bs_government_grants_payable",
+          "unpaid_contributions_to_pension_schemes_current": "bs_pension_unpaid_current",
+          "unpaid_contributions_to_pension_schemes_non_current": "bs_pension_unpaid_non_current",
+          "total_assets_less_current_liabilities": "bs_total_assets_less_curr_liab",
+          "net_assets": "bs_net_assets",
+          "shareholders_equity": "bs_shareholders_equity",
+          "calledup_share_capital": "bs_calledup_share_capital",
+          "retained_earnings_accumulated_losses": "bs_retained_earnings"
+        },
+        "changes_in_equity": {
+          "retained_earnings_accumulated_losses": "eq_retained_earnings",
+          "share_capital": "eq_share_capital",
+          "profit_loss_affecting_equity": "eq_pl_affecting_equity",
+          "dividends_paid": "eq_dividends_paid",
+          "comprehensive_income_expense": "eq_comprehensive_income"
+        },
+        "other_notes_to_financial_statements": {
+          "employee_count": "notes_employee_count",
+          "wages_and_salaries": "notes_wages_and_salaries",
+          "social_security_costs": "notes_social_security_costs",
+          "pension_costs_defined_contribution_plan": "notes_pension_defined_contrib",
+          "pension_other_post_employment_benefit_costs_other_pension_costs": "notes_pension_other_costs",
+          "audit_fees_expenses": "notes_audit_fees_expenses",
+          "fees_for_non_audit_services": "notes_fees_non_audit",
+          "government_grant_income": "notes_government_grant_income",
+          "government_grants_payable": "notes_government_grants_payable",
+          "amount_specific_advance_or_credit_made_in_period_directors": "notes_director_advance_made",
+          "amount_specific_advance_or_credit_directors": "notes_director_advance_balance"
+        },
+        "cash_flow": {
+          "interest_expense_on_bank_overdrafts": "cf_interest_expense_on_bank_overdrafts",
+          "tax_taxcredit_on_profit_or_loss_on_ordinary_activites": "cf_tax_on_profit_loss",
+          "gain_loss_in_cash_flows_from_change_in_inventories": "cf_change_inventories",
+          "gain_loss_in_cash_flows_from_change_in_debtors_trade_other_receivables": "cf_change_debtors",
+          "gain_loss_in_cash_flows_from_change_in_creditors_trade_other_payables": "cf_change_creditors",
+          "net_cash_generated_from_operations": "cf_net_cash_generated_from_operations",
+          "income_taxes_paid_refund_classified_as_operating_activities": "cf_taxes_paid_operating",
+          "net_cash_flows_from_used_in_operating_activities": "cf_net_cf_operating",
+          "purchase_property_plant_equipment": "cf_purchase_ppe",
+          "proceeds_from_sales_property_plant_Equipment": "cf_proceeds_sales_ppe",
+          "net_interest_received_paid_classified_as_investing_activities": "cf_net_interest_investing",
+          "net_cash_flows_from_used_in_investing_activities": "cf_net_cf_investing",
+          "dividends_paid_classified_as_financing_activities": "cf_dividends_paid_financing",
+          "net_cash_flows_from_used_in_financing_activities": "cf_net_cf_financing",
+          "IncreaseDecreaseInCashCashEquivalentsBeforeForeignExchangeDifferencesChangesInConsolidation": "cf_net_change_cash",
+          "cash_bank_on_hand": "cf_cash_bank_on_hand",
+          "cash_bank_on_hand_at_beginning_of_year": "cf_cash_bank_on_hand_at_beginning_of_year"
+        }
+      }
+    },
+    "profiles": {
+      "db_table_name": "src_profiles",
+      "columns": {
+        "_root": {
+          "type": "type",
+          "company_status": "company_status",
+          "company_number": "company_number",
+          "company_name": "company_name",
+          "date_of_creation": "date_of_creation",
+          "accounts_next_due": "accounts_next_due",
+          "sic_codes": "sic_codes"
+        }
+      }
+    }
+  },
+  "validation": {
+    "strict_mode": true,
+    "allow_extra_columns": false,
+    "alert_on_missing": true,
+    "alert_on_extra": true
+  }
+}

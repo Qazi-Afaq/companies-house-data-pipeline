@@ -1,0 +1,9 @@
+.venv
+logs
+zextradocs
+.~lock.*#
+
+transformations/company_fillings/target/
+transformations/company_fillings/dbt_packages/
+transformations/company_fillings/logs/
+requirements-data

@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: src_tables
+    database: postgres
+    schema: finance_companies
+    tables:
+      - name: src_filings
