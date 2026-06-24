@@ -9,3 +9,4 @@ transformations/company_fillings/target/
 transformations/company_fillings/dbt_packages/
 transformations/company_fillings/logs/
 requirements-data
+transformations/airflow_code/dags/__pycache__
