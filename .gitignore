@@ -1,4 +1,6 @@
 .venv
+project-venv
+airflow-venv
 logs
 zextradocs
 .~lock.*#
