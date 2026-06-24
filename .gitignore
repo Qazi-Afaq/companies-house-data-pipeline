@@ -1,12 +1,16 @@
-.venv
-project-venv
-airflow-venv
-logs
-zextradocs
-.~lock.*#
+.venv/
+project-venv/
+airflow-venv/
 
-transformations/company_fillings/target/
-transformations/company_fillings/dbt_packages/
-transformations/company_fillings/logs/
-requirements-data
-transformations/airflow_code/dags/__pycache__
+logs/
+zextradocs/
+
+**/__pycache__/
+
+transformation/company_filings/target/
+transformation/company_filings/dbt_packages/
+transformation/company_filings/logs/
+transformation/airflow_code/dags/__pycache__
+
+requirements-data/
+.~lock.*#
