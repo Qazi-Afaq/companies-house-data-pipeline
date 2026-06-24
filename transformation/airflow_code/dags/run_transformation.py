@@ -20,10 +20,10 @@ with DAG(
     )
 
     t2 = BashOperator(
-        task_id="mart_filings",
+        task_id="fct_filings",
         bash_command=(
             f"cd {DBT_PROJECT} "
-            f"&& {DBT_BIN} run --select mart_filings"
+            f"&& {DBT_BIN} run --select fct_filings"
         ),
     )
 
