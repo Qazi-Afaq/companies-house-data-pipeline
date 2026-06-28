@@ -1,1 +1,0 @@
-{"_invocation_id": "31f43f4c-6699-404b-989e-a3c5b3b21e23", "linked": {"0": {"name": "source.company_filings.src_tables.src_filings", "type": "source", "succ": [2]}, "1": {"name": "model.company_filings.fct_filings", "type": "model"}, "2": {"name": "model.company_filings.stg_filings", "type": "model", "succ": [1]}}}
