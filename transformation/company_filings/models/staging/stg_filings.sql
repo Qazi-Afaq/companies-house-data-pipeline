@@ -33,7 +33,7 @@ select
     eq_pl_affecting_equity::NUMERIC,
     eq_dividends_paid::NUMERIC,
     eq_comprehensive_income::NUMERIC,
-    {{ target.schema }}.cast_to_date(end_date),
+    {{ target.schema }}.cast_to_date(end_date) as end_date,
     company_number::TEXT,
     cf_taxes_paid_operating::NUMERIC,
     cf_tax_on_profit_loss::NUMERIC,
