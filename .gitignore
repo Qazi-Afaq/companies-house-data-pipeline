@@ -12,5 +12,8 @@ transformation/company_filings/dbt_packages/
 transformation/company_filings/logs/
 transformation/airflow_code/dags/__pycache__
 
+ingestion/saved-json-responses
+ingestion/processed_to_landing_db.ipynb
+
 requirements-data/
 .~lock.*#

@@ -1,5 +1,3 @@
-
-
 WITH turnover_history AS (
     SELECT
         *,
@@ -11,10 +9,15 @@ WITH turnover_history AS (
 ),
 with_growth AS (
     SELECT *,
-           ROUND((pl_turnover - pl_turnover_prev) / pl_turnover_prev * 100, 2)                                        AS turnover_growth_pct,
-           ROUND((pl_operating_profit_loss - pl_operating_profit_loss_prev) / pl_operating_profit_loss_prev * 100, 2) AS operating_profit_growth_pct,
-           ROUND((pl_net_profit_loss - pl_net_profit_loss_prev) / pl_net_profit_loss_prev * 100, 2)                   AS net_profit_growth_pct
+           ROUND((pl_turnover - pl_turnover_prev)                               / NULLIF(pl_turnover_prev, 0)              * 100, 2) AS turnover_growth_pct,
+           ROUND((pl_operating_profit_loss - pl_operating_profit_loss_prev)     / NULLIF(pl_operating_profit_loss_prev, 0) * 100, 2) AS operating_profit_growth_pct,
+           ROUND((pl_net_profit_loss - pl_net_profit_loss_prev)                 / NULLIF(pl_net_profit_loss_prev, 0)       * 100, 2) AS net_profit_growth_pct
     FROM turnover_history
+),
+with_current_ratios AS (
+    SELECT *,
+        ROUND(bs_current_assets / NULLIF(bs_creditors_current, 0), 2) AS current_ratio
+    FROM with_growth
 )
 SELECT
     -- all original columns
@@ -118,7 +121,18 @@ SELECT
     -- derived growth metrics
     turnover_growth_pct,
     operating_profit_growth_pct,
-    net_profit_growth_pct
+    net_profit_growth_pct,
 
-FROM with_growth
+    ROUND((pl_turnover - pl_cost_of_sales) / NULLIF(pl_cost_of_sales, 0) * 100, 2) AS gross_profit_margin,
+    ROUND((pl_salaries / NULLIF(pl_turnover , 0) ) * 100 , 2) as staff_cost_ratio,
 
+    ROUND(bs_current_assets / NULLIF(bs_creditors_current , 0), 2) as current_ratio,
+
+    CASE
+        WHEN current_ratio > 1.0              THEN 'green'
+        WHEN current_ratio BETWEEN 0.75 AND 1.0 THEN 'amber'
+        WHEN current_ratio < 0.75             THEN 'red'
+        ELSE NULL
+    END AS current_ratio_flag
+
+FROM with_current_ratios
