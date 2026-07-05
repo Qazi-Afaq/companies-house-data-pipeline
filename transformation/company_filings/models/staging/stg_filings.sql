@@ -1,3 +1,12 @@
+with deduped as (
+    select *,
+        row_number() over (
+            partition by company_number, end_date
+            order by loaded_at desc
+        ) as rn
+    from {{ source('src_tables', 'src_filings') }}
+)
+
 select
     pl_turnover::NUMERIC,
     pl_tax_on_profit_loss::NUMERIC,
@@ -34,6 +43,7 @@ select
     eq_dividends_paid::NUMERIC,
     eq_comprehensive_income::NUMERIC,
     {{ target.schema }}.cast_to_date(end_date) as end_date,
+    EXTRACT(YEAR FROM {{ target.schema }}.cast_to_date(end_date))::integer AS end_date_year,
     company_number::TEXT,
     cf_taxes_paid_operating::NUMERIC,
     cf_tax_on_profit_loss::NUMERIC,
@@ -95,4 +105,5 @@ select
     bs_bank_overdrafts_current::NUMERIC,
     bs_bank_overdrafts::NUMERIC,
     bs_accrued_liabilities::NUMERIC
-from {{ source('src_tables', 'src_filings') }}
+from deduped
+where rn = 1

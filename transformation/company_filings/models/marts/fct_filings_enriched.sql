@@ -23,6 +23,7 @@ SELECT
     -- all original columns
     company_number,
     end_date,
+    end_date_year,
     loaded_at,
     pl_turnover,
     pl_gross_profit_loss,
@@ -133,6 +134,8 @@ SELECT
         WHEN current_ratio BETWEEN 0.75 AND 1.0 THEN 'amber'
         WHEN current_ratio < 0.75             THEN 'red'
         ELSE NULL
-    END AS current_ratio_flag
+    END AS current_ratio_flag,
+
+    ROUND( (pl_operating_profit_loss / NULLIF(pl_turnover , 0)), 2) as operating_margin
 
 FROM with_current_ratios
