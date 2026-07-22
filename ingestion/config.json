@@ -131,6 +131,32 @@
           "sic_codes": "sic_codes"
         }
       }
+    },
+    "psc": {
+      "db_table_name": "src_psc",
+      "columns": {
+        "_root": {
+          "forename": "forename",
+          "surname": "surname",
+          "title": "title",
+          "resultNumber": "result_number",
+          "nationality": "nationality",
+          "country_of_residence": "country_of_residence",
+          "notified_on": "notified_on",
+          "natures_of_control": "natures_of_control"
+        },
+        "dateofbirth": {
+          "month": "date_of_birth_month",
+          "year": "date_of_birth_year"
+        },
+        "address": {
+          "address_line_1": "address_address_line_1",
+          "address_line_2": "address_address_line_2",
+          "country": "address_country",
+          "locality": "address_locality",
+          "postal_code": "postal_code"
+        }
+      }
     }
   },
   "validation": {

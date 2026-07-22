@@ -1,0 +1,17 @@
+The schema of the source json is defined in the config.json to mirror the structure of the source json.
+The json file is loaded from the source into the "data" variable in the processed_to_landing_db.ipynb
+It contains keys for
+Financials
+PSC
+PROFILE
+OFFICERS
+
+The data json object is broken down into multiple components by loading into separate variables : "financials" , "psc" , "profile" etc.
+
+Each component is then flattened, if required to fit in a pandas dataframe. For example the financial component is first flattened using the "flatten_dict" function", because the finanancial component contains multiple lists which contain dictionaries who sub-keys need to be flattened in order for it to be converted to a dataframe.
+
+"flatten_dict" function: Given a dictionary, this function will flatten all levels of the dictionary except a key whos value is a list. only the dictionaries inside the list will be flattened and the list itself will not be hoisted to it's parent object.
+
+Next the columns of the components dataframes are renamed if their names are too long.
+
+These dataframes are then pushed onto the data warehouse using pandas .to_sql function.
