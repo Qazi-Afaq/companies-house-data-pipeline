@@ -7,3 +7,4 @@ sources:
     tables:
       - name: src_filings
       - name: src_profiles
+      - name: src_psc
