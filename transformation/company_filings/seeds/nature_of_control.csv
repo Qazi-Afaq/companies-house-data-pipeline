@@ -1,0 +1,8 @@
+nature_of_control,category,band_low,band_high
+ownership-of-shares-25-to-50-percent,ownership_of_shares,25,50
+ownership-of-shares-50-to-75-percent,ownership_of_shares,50,75
+ownership-of-shares-75-to-100-percent,ownership_of_shares,75,100
+voting-rights-25-to-50-percent,voting_rights,25,50
+voting-rights-50-to-75-percent,voting_rights,50,75
+voting-rights-75-to-100-percent,voting_rights,75,100
+right-to-appoint-and-remove-directors,board_control,,
