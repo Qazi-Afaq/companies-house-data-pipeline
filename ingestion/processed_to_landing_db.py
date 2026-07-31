@@ -6,12 +6,6 @@
 # In[ ]:
 
 
-
-
-
-# In[1]:
-
-
 import json
 import os
 import pandas as pd
@@ -24,21 +18,27 @@ with open('ingestion/config.json', 'r') as f:
 
 # # LOAD files via s3 or local
 
-# In[2]:
+# In[ ]:
+
+
+
+
+
+# In[ ]:
 
 
 data = None
-with open('ingestion/saved-json-responses/good-quality/aranci-advisors.json', 'r') as file:
+with open('ingestion/saved-json-responses/good-quality/perthshire.json', 'r') as file:
     data = json.load(file)
 
 
-# In[3]:
+# In[ ]:
 
 
 data
 
 
-# In[4]:
+# In[ ]:
 
 
 def flatten_dict(d, prefix=''):
@@ -81,7 +81,7 @@ def flatten_list(lst):
 
 # # BREAK into tables(profile , financials , officers , psc)
 
-# In[5]:
+# In[ ]:
 
 
 financials = data['financials']
@@ -94,21 +94,28 @@ for finance_obj in financials:
     finance_obj['company_number'] = profile['company_number']
 
 
+# PSC
+psc = data['psc']
+psc = [flatten_dict(p) for p in data['psc']]
+for p in psc:
+    p['company_number'] = profile['company_number']
+
+
 # # Break profile 
 
-# In[6]:
+# In[ ]:
 
 
 profile_df = pd.DataFrame([profile])
 
 
-# In[7]:
+# In[ ]:
 
 
 profile_df
 
 
-# In[8]:
+# In[ ]:
 
 
 profile_df.head()
@@ -116,19 +123,19 @@ profile_df.head()
 
 # # Break financials
 
-# In[9]:
+# In[ ]:
 
 
 financials_df = pd.DataFrame(financials)
 
 
-# In[10]:
+# In[ ]:
 
 
 financials_df
 
 
-# In[11]:
+# In[ ]:
 
 
 financials_df.columns
@@ -136,13 +143,13 @@ financials_df.columns
 
 # # Break officers
 
-# In[12]:
+# In[ ]:
 
 
 # officers_df = pd.DataFrame(officers)
 
 
-# In[13]:
+# In[ ]:
 
 
 # officers_df
@@ -150,100 +157,92 @@ financials_df.columns
 
 # # Break PSC
 
-# In[14]:
+# In[ ]:
 
 
-# psc_df = pd.DataFrame(psc)
+psc_df = pd.DataFrame(psc)
 
 
-# In[15]:
+# In[ ]:
 
 
-# psc_df
+psc_df
 
 
 # ## CLEAN
 
-# #### Convert to required data-types
-
-# In[16]:
+# In[ ]:
 
 
-config_tables = config['tables']
-def clean_dataframe(df_table_name , df , table_obj):
-    config_columns = table_obj[df_table_name]['columns']
-    df_columns = df.columns
-    for col in df_columns:
-        config_col_obj = config_columns[col]
-        conf_col_source_prefix = config_col_obj.get('source_prefix')
-        conf_col_source_name = config_col_obj.get('source_name')
-        conf_col_type = config_col_obj.get('type')
+# cast all columns to string
+financials_df = financials_df.astype('str')
 
 
-        if conf_col_type == 'float64':
-            # before applying conversion
-            col_null_count_before = len(df[df[col].isna()])
-            df[col] = pd.to_numeric(df[col] , errors='coerce')
-            df[col] = df[col].astype('float64')
-            # after applying conversion
-            col_null_count_after = len(df[df[col].isna()])
+# #### VERIFY NUMBER OF COLUMNS IN THE DATAFRAME ARE EXPECTED USING CONFIG.JSON
 
-
-        elif conf_col_type == 'string':
-            df[col] = df[col].astype('string')
-
-        elif conf_col_type == 'datetime64[ns]':
-            df[col] = pd.to_datetime(df[col] , errors='coerce' , dayfirst=True).dt.date
-
-        # output each column's before-after nulls for stats
-
-clean_dataframe('finance_statements', financials_df, config_tables)
-clean_dataframe('profiles' , profile_df , config_tables)
-
-
-# #### RENAME COLUMNS TO AVOID TRUNCATION IN DATABASE (50 characters or less)
-
-# In[17]:
-
-
-config_tables = config['tables']
-def rename_cols_for_db(df_table_name , df , conf_table_obj):
-    config_columns = conf_table_obj[df_table_name]['columns']
-    for col in df.columns:
-        conf_curr_col_obj = config_columns[col]
-        db_column_name = conf_curr_col_obj.get('db_column')
-        if db_column_name:
-            df.rename(columns={col:db_column_name} , inplace=True)
-
-rename_cols_for_db('finance_statements' , financials_df , config_tables)
-rename_cols_for_db('profiles' , profile_df , config_tables)
-
-
-# In[18]:
-
-
-financials_df.columns
-
-
-# In[19]:
+# In[ ]:
 
 
 # the columns of dataframes must have same length of the config number of columns: if not then: fail execution
 config_tables = config['tables']
-conf_financials_df_len = len(config_tables['finance_statements']['columns'].keys())
-conf_financials_df_len = (conf_financials_df_len -1) if 'index' in financials_df.columns else conf_financials_df_len
-conf_profiles_df_len = len(config_tables['profiles']['columns'].keys())
-conf_profiles_df_len = (conf_profiles_df_len -1) if 'index' in profile_df.columns else conf_profiles_df_len
+# LATER
 
-print(conf_financials_df_len , len(financials_df.columns))
-print(conf_profiles_df_len , len(profile_df.columns))
-if (conf_financials_df_len != len(financials_df.columns)) or (conf_profiles_df_len != len(profile_df.columns)):
-    raise KeyError('UNEXPECTED COLUMNS FOUND IN DATAFRAMES')
+
+# #### REPLACE COLUMN NAMES TO AVOID NAME TRUNCATION IN DATABASE
+
+# In[ ]:
+
+
+def rename_columns(config_columns, dataframe):
+    """
+    Flatten nested config column structure and rename dataframe columns accordingly.
+
+    Args:
+        config_columns: Nested dictionary from config['tables'][table_name]['columns']
+        dataframe: pandas DataFrame to rename columns in
+
+    Returns:
+        Renamed DataFrame (modified in-place)
+    """
+    for key in config_columns.keys():
+        sub_keys = config_columns[key].keys()
+        for s_key in sub_keys:
+            # Construct flattened column name
+            if key == '_root':
+                flattened_df_col_name = s_key
+            else:
+                flattened_df_col_name = f"{key}_{s_key}"
+
+            # Get the target column name from config
+            target_col_name = config_columns[key][s_key]
+
+            # Rename if column exists
+            if flattened_df_col_name in dataframe.columns:
+                dataframe.rename(columns={flattened_df_col_name: target_col_name}, inplace=True)
+            else:
+                print(f"Warning: Column '{flattened_df_col_name}' not found in DataFrame")
+
+    return dataframe
+
+# Usage for finance_statements
+print("FINANCIALS RENAMING START: =====================================")
+conf_finance_df_cols = config['tables']['finance_statements']['columns']
+financials_df = rename_columns(conf_finance_df_cols, financials_df)
+
+# Usage for profiles
+print("PROFILES RENAMING START: =====================================")
+conf_profiles_df_cols = config['tables']['profiles']['columns']
+profile_df = rename_columns(conf_profiles_df_cols, profile_df)
+
+print("PSC RENAMING START: =====================================")
+# Usage for psc
+conf_psc_df_cols = config['tables']['psc']['columns']
+psc_df = rename_columns(conf_psc_df_cols , psc_df)
 
 
 # # PUSH CLEANED tables data into database
 
-# In[20]:
+# In[ ]:
 
 
 from sqlalchemy import create_engine
@@ -251,12 +250,12 @@ from sqlalchemy import create_engine
 engine = create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/postgres")
 
 
-# In[22]:
+# In[ ]:
 
 
 config_tables = config['tables']
 financials_df['loaded_at'] = pd.Timestamp('now', tz='utc')
-financials_df.to_sql(config_tables['finance_statements']['db_table_name'] , engine , index=False , schema='finance_companies', if_exists='replace')
+financials_df.to_sql(config_tables['finance_statements']['db_table_name'] , engine , index=False , schema='finance_companies', if_exists='append')
 
 
 # In[ ]:
@@ -281,7 +280,19 @@ profile_df.to_sql(config_tables['profiles']['db_table_name'] , engine , index=Fa
 # In[ ]:
 
 
+from sqlalchemy.types import JSON
 
+config_tables = config['tables']
+psc_df['loaded_at'] = pd.Timestamp('now', tz='utc')
+
+psc_df.to_sql(
+    config_tables['psc']['db_table_name'],
+    engine,
+    index=False,
+    schema='finance_companies',
+    if_exists='append',
+    dtype={"natures_of_control": JSON}
+)
 
 
 # In[ ]:
