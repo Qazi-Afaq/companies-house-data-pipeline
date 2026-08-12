@@ -35,3 +35,5 @@ Python/pandas ingestion  ──►  src_ tables (PostgreSQL)
         ▼
    Orchestrated by Airflow (WSL2)
 
+   ![image alt](https://github.com/Qazi-Afaq/companies-house-data-pipeline/blob/main/docs/images/dbt-dag.png?raw=true)
+
