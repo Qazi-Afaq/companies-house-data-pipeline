@@ -5,8 +5,11 @@ import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.types import JSON
 import boto3
+from dotenv import load_dotenv
 
-os.chdir("/home/afaq/learning/learning-de/projects/finance-de-projects/financial-statements-pipeline")
+load_dotenv()
+
+os.chdir(os.environ["PROJECT_ROOT"])
 
 with open('ingestion/config.json', 'r') as f:
     config = json.load(f)
@@ -98,15 +101,24 @@ def process_and_upload_file_data(data):
     psc_df = rename_columns(conf_psc_df_cols, psc_df)
 
     # PUSH CLEANED tables data into database
-    engine = create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/postgres")
+    db_user = os.environ["DB_USER"]
+    db_password = os.environ["DB_PASSWORD"]
+    db_host = os.environ["DB_HOST"]
+    db_port = os.environ["DB_PORT"]
+    db_name = os.environ["DB_NAME"]
+    db_schema = os.environ["DB_SCHEMA"]
+
+    engine = create_engine(
+        f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    )
 
     config_tables = config['tables']
     financials_df['loaded_at'] = pd.Timestamp('now', tz='utc')
-    financials_df.to_sql(config_tables['finance_statements']['db_table_name'], engine, index=False, schema='finance_companies', if_exists='append')
+    financials_df.to_sql(config_tables['finance_statements']['db_table_name'], engine, index=False, schema=db_schema, if_exists='append')
 
     config_tables = config['tables']
     profile_df['loaded_at'] = pd.Timestamp('now', tz='utc')
-    profile_df.to_sql(config_tables['profiles']['db_table_name'], engine, index=False, schema='finance_companies', if_exists='append', dtype={
+    profile_df.to_sql(config_tables['profiles']['db_table_name'], engine, index=False, schema=db_schema, if_exists='append', dtype={
         "sic_codes": JSON,
         "registered_office_address": JSON
     })
@@ -117,13 +129,13 @@ def process_and_upload_file_data(data):
         config_tables['psc']['db_table_name'],
         engine,
         index=False,
-        schema='finance_companies',
+        schema=db_schema,
         if_exists='append',
         dtype={"natures_of_control": JSON}
     )
 
 s3_resource = boto3.resource('s3')
-bucket_name = 'company-register-json-filings'
+bucket_name = os.environ["S3_BUCKET_NAME"]
 bucket = s3_resource.Bucket(bucket_name)
 
 for obj in bucket.objects.all():

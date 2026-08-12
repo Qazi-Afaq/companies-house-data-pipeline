@@ -17,3 +17,5 @@ ingestion/processed_to_landing_db.ipynb
 
 requirements-data/
 .~lock.*#
+
+.env

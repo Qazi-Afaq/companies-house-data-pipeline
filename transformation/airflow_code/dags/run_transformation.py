@@ -1,9 +1,9 @@
 from airflow.providers.standard.operators.bash import BashOperator
-from airflow.sdk import DAG, TaskGroup
+from airflow.sdk import DAG, TaskGroup, Variable
 from datetime import datetime
 
-DBT_PROJECT = "/home/afaq/learning/learning-de/projects/finance-de-projects/financial-statements-pipeline/transformation/company_filings"
-DBT_BIN = "/home/afaq/learning/learning-de/projects/finance-de-projects/financial-statements-pipeline/project-venv/bin/dbt"
+DBT_PROJECT = Variable.get("DBT_PROJECT")
+DBT_BIN = Variable.get("DBT_BIN")
 
 with DAG(
     "run_dbt_models",
